@@ -1,17 +1,9 @@
-# Items List Pattern
-
-Project was created to work with HTML table element
-
-
-## Example of use
-
-Items list implementation:
-```python
-# -- FILE: table.py
 from items_list import Item, Container
+
 
 class UserItem(Item):
     pass
+
 
 class UserItems(Container):
 
@@ -31,45 +23,20 @@ class UserItems(Container):
     @property
     def num_rows(self):
         return len(self.table.find_elements("css", "tbody > tr"))
-```
 
-Example of page object class implementation:
-```python
-# -- FILE: home_page.py
-from table import UserItems
+    @property
+    def headers(self):
+        elements = self.table.find_elements("css", "thead > tr > th")
+        return [element.text for element in elements]
 
-class HomePage:    
+
+class HomePage:
     items_list = UserItems('id', 'table1')
-   
-    def __init__(self, driver, url = 'http://localhost/tables'):
+
+    def __init__(self, driver, url):
         self.driver = driver
-        self.url = url           
-        
+        self.url = url
+
     def open(self):
         self.driver.get(self.url)
-```
-
-Use in Unittest:
-```python
-# -- FILE: test_table.py
-import unittest
-from selenium.webdriver import Chrome
-from home_page import HomePage
-
-class TestTable(unittest.TestCase):
-
-    def setUp(self):
-        self.driver = Chrome()
-
-    def test_one(self):
-        page = HomePage(self.driver)
-        page.open()
-        item = page.items_list.get_item_by_position(1)
-        
-        assert item.first_name.text == 'John'
-        assert item.last_name.text == 'Smith'
-        assert item.email.text == 'jsmith@gmail.com'
-
-    def tearDown(self):
-            self.driver.close()
-```
+        return self
