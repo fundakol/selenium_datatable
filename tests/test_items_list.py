@@ -2,7 +2,7 @@ import unittest
 from os import path
 from selenium.webdriver import Chrome
 
-from .page_object import HomePage
+from tests.page_object import HomePage
 
 URL = path.join(path.abspath(path.join(path.dirname(__file__))), r'index.html')
 
@@ -22,12 +22,21 @@ class TestItemsList(unittest.TestCase):
     def test_num_of_items(self):
         self.assertEqual(self.page.items_list.num_rows, 4)
 
-    def test_get_item_by_row_id(self):
+    def test_get_item_by_row_id_1(self):
         item = self.page.items_list.get_item_by_position(1)
 
         self.assertEqual(item.first_name.text, 'John')
         self.assertEqual(item.last_name.text, 'Smith')
         self.assertEqual(item.email.text, 'jsmith@gmail.com')
+        self.assertEqual(1, self.page.items_list.current_item)
+
+    def test_get_item_by_row_id_2(self):
+        item = self.page.items_list.get_item_by_position(2)
+
+        self.assertEqual(item.first_name.text, 'Frank')
+        self.assertEqual(item.last_name.text, 'Bach')
+        self.assertEqual(item.email.text, 'fbach@yahoo.com')
+        self.assertEqual(2, self.page.items_list.current_item)
 
     def test_get_item_by_property_name(self):
         item = self.page.items_list.get_item_by_name('last_name', 'Doe')
@@ -36,6 +45,7 @@ class TestItemsList(unittest.TestCase):
         self.assertEqual(item.last_name.text, 'Doe')
         self.assertEqual(item.email.text, 'jdoe@hotmail.com')
         self.assertEqual(item.due.text, '$100.00')
+        self.assertEqual(3, self.page.items_list.current_item)
 
     def tearDown(self):
             self.driver.close()

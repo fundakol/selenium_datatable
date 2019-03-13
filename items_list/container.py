@@ -18,19 +18,20 @@ class Container(metaclass=abc.ABCMeta):
         return self
 
     def __iter__(self):
-        self.__current_item = 1
+        self.__item_index = 1
         return self
 
     def __next__(self):
-        if self.__current_item > self.num_rows:
-            self.__current_item = 1
+        if self.__item_index > self.num_rows:
+            self.__item_index = 1
             raise StopIteration
-        item = self.get_item_by_position(self.__current_item)
-        self.__current_item += 1
+        item = self.get_item_by_position(self.__item_index)
+        self.__item_index += 1
         return item
 
     def get_item_by_position(self, row_number: int):
-        self.item.update_item_number(row_number)
+        self.__current_item = row_number
+        self.item.update_item_number(self.__current_item)
         for item_name, locator in self.item.locators.items():
             try:
                 element = self.table.find_element(*locator)
