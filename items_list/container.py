@@ -6,11 +6,11 @@ from selenium.common.exceptions import NoSuchElementException
 class Container(metaclass=abc.ABCMeta):
     """Container class for Items list"""
 
-    def __init__(self, how: str, what: str):
+    def __init__(self, how: str, what: str) -> None:
         self.item = None
         self.__driver = None
-        self.__table_locator = (how, what)
-        self.__current_item = 1
+        self.__table_locator: tuple = (how, what)
+        self.__current_item: int = 1
 
     def __get__(self, obj, owner):
         self.__driver = obj.driver
@@ -42,9 +42,10 @@ class Container(metaclass=abc.ABCMeta):
 
     def get_item_by_name(self, property_name: str, value: str):
         for item in self:
-            property = getattr(item, property_name, None)
-            assert property is not None
-            if property.text == value:
+            property_ = getattr(item, property_name, None)
+            if property_ is None:
+                raise AttributeError(property_name)
+            if property_.text == value:
                 return item
         return None
 
@@ -54,9 +55,9 @@ class Container(metaclass=abc.ABCMeta):
         pass
 
     @property
-    def current_item(self):
+    def current_item(self) -> int:
         return self.__current_item
 
     @property
     def headers(self):
-        raise NotImplemented
+        raise NotImplementedError
