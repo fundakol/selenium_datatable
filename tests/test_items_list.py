@@ -47,5 +47,12 @@ class TestItemsList(unittest.TestCase):
         self.assertEqual(item.due.text, '$100.00')
         self.assertEqual(3, self.page.items_list.current_item)
 
+    def test_locators(self):
+        locators = self.page.items_list.item.locators
+        assert 'last_name' in locators.keys()
+        assert 'first_name' in locators.keys()
+        current_item = self.page.items_list.current_item
+        assert locators['last_name'] == ("css selector", "tr:nth-of-type({}) td:nth-of-type(1)".format(current_item))
+
     def tearDown(self):
             self.driver.close()
