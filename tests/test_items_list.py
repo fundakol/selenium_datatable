@@ -10,7 +10,7 @@ URL = path.join(path.abspath(path.join(path.dirname(__file__))), r'index.html')
 class TestItemsList(unittest.TestCase):
 
     def setUp(self):
-        self.driver = Chrome()
+        self.driver = Chrome(command_executor="http://localhost:9222/wd/hub")
         self.page = HomePage(self.driver, URL)
         self.page.open()
 
