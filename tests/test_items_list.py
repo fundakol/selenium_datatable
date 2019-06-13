@@ -1,6 +1,6 @@
 import unittest
 from os import path
-from selenium.webdriver import Chrome
+from selenium import webdriver
 
 from tests.page_object import HomePage
 
@@ -10,7 +10,7 @@ URL = path.join(path.abspath(path.join(path.dirname(__file__))), r'index.html')
 class TestItemsList(unittest.TestCase):
 
     def setUp(self):
-        self.driver = Chrome(command_executor="http://localhost:9222/wd/hub")
+        self.driver = webdriver.Remote(command_executor="http://localhost:9222/wd/hub")
         self.page = HomePage(self.driver, URL)
         self.page.open()
 
