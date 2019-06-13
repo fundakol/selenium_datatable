@@ -10,17 +10,13 @@ class Item:
 
     def update_item_number(self, item_number: int) -> dict:
         self.__item_number = item_number
-        self.__locators = {k: v.format(item_num=item_number)
+        self.__locators = {k: (v[0], v[1].format(item_num=item_number))
                            for k, v in self.__locators_template.items()}
         return self.__locators
 
     @property
     def locators(self) -> dict:
-        _locators = dict()
-        for item, locator in self.__locators.items():
-            locator = locator.split('==')
-            _locators[item] = (*locator,)
-        return _locators
+        return self.__locators
 
     @property
     def item_number(self) -> int:
@@ -29,5 +25,5 @@ class Item:
 
     def __validate_locators_template(self, locators_template: dict):
         assert isinstance(locators_template, dict)
-        for values in locators_template.values():
-            assert '==' in values
+        for value in locators_template.values():
+            assert isinstance(value, tuple)

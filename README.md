@@ -18,13 +18,13 @@ class UserItems(Container):
     def __init__(self, how, what):
         super().__init__(how, what)
         locators_template = {
-            'last_name': "css==tr:nth-of-type({item_num}) td:nth-of-type(1)",
-            'first_name': "css==tr:nth-of-type({item_num}) td:nth-of-type(2)",
-            'email': "css==tr:nth-of-type({item_num}) td:nth-of-type(3)",
-            'due': "css==tr:nth-of-type({item_num}) td:nth-of-type(4)",
-            'web_site': "css==tr:nth-of-type({item_num}) td:nth-of-type(5)",
-            'delete_button': "css==tr:nth-of-type({item_num}) td:nth-of-type(6) a[href='#delete']",
-            'edit_button': "css==tr:nth-of-type({item_num}) td:nth-of-type(6) a[href='#edit']",
+            'last_name': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(1)"),
+            'first_name': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(2)"),
+            'email': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(3)"),
+            'due': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(4)"),
+            'web_site': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(5)"),
+            'delete_button': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(6) a[href='#delete']"),
+            'edit_button': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(6) a[href='#edit']"),
         }
         self.item = UserItem(locators_template, self.current_item)
 
@@ -39,9 +39,9 @@ Example of page object class implementation:
 from table import UserItems
 
 class HomePage:    
-    items_list = UserItems('id', 'table1')
+    items_list = UserItems("id", "table1")
    
-    def __init__(self, driver, url = 'http://localhost/tables'):
+    def __init__(self, driver, url='http://localhost/tables'):
         self.driver = driver
         self.url = url           
         
