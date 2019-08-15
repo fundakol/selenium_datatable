@@ -2,13 +2,18 @@ import abc
 
 from selenium.common.exceptions import NoSuchElementException
 
+from .item import Item
+
 
 class Container(metaclass=abc.ABCMeta):
     """Container class for Items list"""
 
+    @property
+    @abc.abstractmethod
+    def item(self) -> Item:
+        pass
+
     def __init__(self, how: str, what: str) -> None:
-        self.item = None
-        self.__driver = None
         self.__table_locator: tuple = (how, what)
         self.__current_item: int = 1
 
@@ -51,13 +56,14 @@ class Container(metaclass=abc.ABCMeta):
 
     @property
     @abc.abstractmethod
-    def num_rows(self):
-        pass
+    def num_rows(self) -> int:
+        """Return a number of rows in the table"""
 
     @property
     def current_item(self) -> int:
+        """Return the current row"""
         return self.__current_item
 
     @property
     def headers(self):
-        raise NotImplementedError
+        raise NotImplementedError()

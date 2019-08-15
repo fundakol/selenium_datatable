@@ -55,4 +55,4 @@ class TestItemsList(unittest.TestCase):
         assert locators['last_name'] == ("css selector", "tr:nth-of-type({}) td:nth-of-type(1)".format(current_item))
 
     def tearDown(self):
-            self.driver.close()
+        self.driver.close()
