@@ -3,7 +3,7 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-PROJECT_DIR = os.path.dirname(os.path.join(os.path.abspath(__file__), '..'))
+PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 
 @pytest.fixture(scope='session')

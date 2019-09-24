@@ -5,7 +5,7 @@ import docker
 import pytest
 from tests.fixtures.driver import *
 
-PROJECT_DIR = os.path.dirname(os.path.join(os.path.abspath(__file__), '..'))
+PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 BROWSER = 'chrome'
 SELENIUM_VERSION = '3.141.0'
