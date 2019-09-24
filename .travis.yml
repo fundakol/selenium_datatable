@@ -1,12 +1,19 @@
-dist: xenial
+sudo: required
 language: python
-addons:
-  chrome: stable
-before_install:
-  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 python:
-  - "3.7"
+    - "3.7"
+before_install:
+    - pip install codecov
+    - export TRAVIS=true
+    - docker pull python:3.7.4
+    - docker pull selenium/standalone-chrome:3.4.0
+    - docker network create test1
+    - docker run -d --net test1 --name webserver -p 8000:8000 -v $(pwd)/tests/index.html:/www/index.html python:3.7.4 bash -c "cd /www && python -m http.server"
+    - docker run -d --net test1 -p 4444:4444 -e GRID_TIMEOUT=10 selenium/standalone-chrome:3.4.0
 install:
-  - pip install -r requirements.txt
+    - pip install -r requirements.txt
+services: docker
 script:
-  - pytest
+    - coverage run --omit="*conftest*" -m py.test tests/test_travis.py
+after_success:
+    - codecov
