@@ -1,16 +1,18 @@
 import unittest
 from os import path
-from selenium.webdriver import Chrome
+from selenium.webdriver import Chrome, ChromeOptions
 
 from tests.page_object import HomePage
 
-URL = path.join(path.abspath(path.join(path.dirname(__file__))), r'index.html')
+URL = path.join(path.abspath(path.join(path.dirname(__file__))), 'index.html')
 
 
 class TestItemsList(unittest.TestCase):
 
     def setUp(self):
-        self.driver = Chrome()
+        options = ChromeOptions()
+        options.headless = True
+        self.driver = Chrome(options=options)
         self.page = HomePage(self.driver, URL)
         self.page.open()
 
@@ -38,14 +40,29 @@ class TestItemsList(unittest.TestCase):
         self.assertEqual(item.email.text, 'fbach@yahoo.com')
         self.assertEqual(2, self.page.items_list.current_item)
 
-    def test_get_item_by_property_name(self):
-        item = self.page.items_list.get_item_by_name('last_name', 'Doe')
+    def test_get_item_by_property_name_one_property(self):
+        item = self.page.items_list.get_item_by_property(last_name='Doe')
 
+        self.assertIsNotNone(item)
         self.assertEqual(item.first_name.text, 'Jason')
         self.assertEqual(item.last_name.text, 'Doe')
         self.assertEqual(item.email.text, 'jdoe@hotmail.com')
         self.assertEqual(item.due.text, '$100.00')
         self.assertEqual(3, self.page.items_list.current_item)
+
+    def test_get_item_by_property_name_two_properties(self):
+        item = self.page.items_list.get_item_by_property(last_name='Doe', first_name='Jason')
+
+        self.assertIsNotNone(item)
+        self.assertEqual(item.first_name.text, 'Jason')
+        self.assertEqual(item.last_name.text, 'Doe')
+        self.assertEqual(item.email.text, 'jdoe@hotmail.com')
+        self.assertEqual(item.due.text, '$100.00')
+        self.assertEqual(3, self.page.items_list.current_item)
+
+    def test_get_item_by_property_name_not_match(self):
+        item = self.page.items_list.get_item_by_property(last_name='Doe', first_name='not match')
+        self.assertIsNone(item)
 
     def test_locators(self):
         locators = self.page.items_list.item.locators
@@ -56,3 +73,4 @@ class TestItemsList(unittest.TestCase):
 
     def tearDown(self):
         self.driver.close()
+        self.driver.quit()

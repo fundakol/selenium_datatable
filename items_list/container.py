@@ -45,12 +45,19 @@ class Container(metaclass=abc.ABCMeta):
             setattr(self.item, item_name, element)
         return self.item
 
-    def get_item_by_name(self, property_name: str, value: str):
+    def get_item_by_property(self, **kwargs):
         for item in self:
-            property_ = getattr(item, property_name, None)
-            if property_ is None:
-                raise AttributeError(property_name)
-            if property_.text == value:
+            match = False
+            for key, value in kwargs.items():
+                property_ = getattr(item, key, None)
+                if property_ is None:
+                    raise AttributeError(key)
+                if property_.text == value:
+                    match = True
+                else:
+                    match = False
+                    break
+            if match:
                 return item
         return None
 
