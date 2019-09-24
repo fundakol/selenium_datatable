@@ -3,7 +3,7 @@ import os
 from time import sleep
 import docker
 import pytest
-from tests.fixtures import *
+from tests.fixtures.driver import *
 
 PROJECT_DIR = os.path.dirname(os.path.join(os.path.abspath(__file__), '..'))
 
