@@ -18,16 +18,16 @@ def test_num_of_items(home_page):
 
 
 def test_get_item_by_row_id_1(home_page):
-    item = home_page.page.items_list.get_item_by_position(1)
+    item = home_page.items_list.get_item_by_position(1)
 
     assert item.first_name.text == 'John'
     assert item.last_name.text == 'Smith'
     assert item.email.text == 'jsmith@gmail.com'
-    assert home_page.page.items_list.current_item == 1
+    assert home_page.items_list.current_item == 1
 
 
 def test_get_item_by_row_id_2(home_page):
-    item = home_page.page.items_list.get_item_by_position(2)
+    item = home_page.items_list.get_item_by_position(2)
 
     assert item.first_name.text == 'Frank'
     assert item.last_name.text == 'Bach'
