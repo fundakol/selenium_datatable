@@ -22,8 +22,9 @@ class UserItem(Item):
         }
 
 class UserItems(Container):
-    item = UserItem()    
-    headers_locator = ("css", "tbody > tr")    
+    item = UserItem()
+    row_locator = ("css selector", "tbody > tr")
+    headers_locator = ("css selector", "tbody > tr")    
 ```
 
 Example of page object class implementation:
