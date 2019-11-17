@@ -60,9 +60,9 @@ class TestTable(unittest.TestCase):
         page.open()
         item = page.items_list.get_item_by_position(1)
         
-        assert item.first_name.text == 'John'
-        assert item.last_name.text == 'Smith'
-        assert item.email.text == 'jsmith@gmail.com'
+        self.assertEqual(item.first_name.text, 'John')
+        self.assertEqual(item.last_name.text, 'Smith')
+        self.assertEqual(item.email.text, 'jsmith@gmail.com')
 
     def tearDown(self):
             self.driver.close()
