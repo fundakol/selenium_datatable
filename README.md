@@ -23,10 +23,7 @@ class UserItem(Item):
 
 class UserItems(Container):
     item = UserItem()    
-
-    @property
-    def num_rows(self):
-        return len(self.table.find_elements("css", "tbody > tr"))
+    headers_locator = ("css", "tbody > tr")    
 ```
 
 Example of page object class implementation:
@@ -57,7 +54,7 @@ class TestTable(unittest.TestCase):
     def setUp(self):
         self.driver = Chrome()
 
-    def test_one(self):
+    def test_get_item_from_first_row(self):
         page = HomePage(self.driver)
         page.open()
         item = page.items_list.get_item_by_position(1)

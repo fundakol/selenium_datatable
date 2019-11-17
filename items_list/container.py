@@ -1,17 +1,23 @@
 import abc
+from collections.abc import Iterator, Sequence
 
 from selenium.common.exceptions import NoSuchElementException
 
 from .item import Item
 
 
-class Container(metaclass=abc.ABCMeta):
+error_msg = 'Attribute "{}" must be implemented as tuple("strategy", "locator")'
+
+
+class Container(abc.ABC, Iterator, Sequence):
     """Container class for Items list"""
+    row_locator = None
+    headers_locator = None
 
     @property
     @abc.abstractmethod
     def item(self) -> Item:
-        pass
+        """A single row item"""
 
     def __init__(self, how: str, what: str) -> None:
         self.__table_locator: tuple = (how, what)
@@ -27,16 +33,22 @@ class Container(metaclass=abc.ABCMeta):
         return self
 
     def __next__(self):
-        if self.__item_index > self.num_rows:
+        if self.__item_index > len(self):
             self.__item_index = 1
             raise StopIteration
         item = self.get_item_by_position(self.__item_index)
         self.__item_index += 1
         return item
 
+    def __len__(self):
+        return len(self.table.find_elements(*self.get_row_locator()))
+
+    def __getitem__(self, item) -> Item:
+        return self.get_item_by_position(item)
+
     def get_item_by_position(self, row_number: int):
         self.__current_item = row_number
-        self.item.update_item_number(self.__current_item)
+        self.item.item_number = self.__current_item
         for item_name, locator in self.item.locators.items():
             try:
                 element = self.table.find_element(*locator)
@@ -62,9 +74,9 @@ class Container(metaclass=abc.ABCMeta):
         return None
 
     @property
-    @abc.abstractmethod
     def num_rows(self) -> int:
         """Return a number of rows in the table"""
+        return self.__len__()
 
     @property
     def current_item(self) -> int:
@@ -72,5 +84,16 @@ class Container(metaclass=abc.ABCMeta):
         return self.__current_item
 
     @property
-    def headers(self):
-        raise NotImplementedError()
+    def headers(self) -> list:
+        elements = self.table.find_elements(*self.get_headers_locator())
+        return [element.text for element in elements]
+
+    def get_row_locator(self) -> tuple:
+        if self.row_locator is None:
+            raise NotImplementedError(error_msg.format("row_locator"))
+        return self.row_locator
+
+    def get_headers_locator(self) -> tuple:
+        if self.headers_locator is None:
+            raise NotImplementedError(error_msg.format("headers_locator"))
+        return self.headers_locator
