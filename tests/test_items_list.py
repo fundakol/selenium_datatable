@@ -32,7 +32,7 @@ def test_get_item_by_row_id_2(home_page):
     assert item.first_name.text == 'Frank'
     assert item.last_name.text == 'Bach'
     assert item.email.text == 'fbach@yahoo.com'
-    assert 2 == home_page.page.items_list.current_item
+    assert 2 == home_page.items_list.current_item
 
 
 def test_get_item_by_property_name(home_page):
@@ -42,7 +42,7 @@ def test_get_item_by_property_name(home_page):
     assert item.last_name.text == 'Doe'
     assert item.email.text == 'jdoe@hotmail.com'
     assert item.due.text == '$100.00'
-    assert 3 == home_page.page.items_list.current_item
+    assert 3 == home_page.items_list.current_item
 
 
 def test_locators(home_page):
