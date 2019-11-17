@@ -5,7 +5,7 @@ from tests.page_object import HomePage
 
 @pytest.fixture(scope='module')
 def home_page(driver):
-    return HomePage(driver, 'http://localhost:8000').open()
+    return HomePage(driver, 'http://webserver:8000').open()
 
 
 def test_get_headers(home_page):
