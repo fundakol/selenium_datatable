@@ -46,15 +46,15 @@ def test_get_item_by_row_id_3(home_page):
     assert 2 == home_page.items_list.current_item
 
 
-def test_get_item_by_property_name_one_property(self):
-    item = self.page.items_list.get_item_by_property(last_name='Doe')
+def test_get_item_by_property_name_one_property(home_page):
+    item = home_page.items_list.get_item_by_property(last_name='Doe')
 
-    self.assertIsNotNone(item)
+    assert item is not None
     assert item.first_name.text == 'Jason'
     assert item.last_name.text == 'Doe'
     assert item.email.text == 'jdoe@hotmail.com'
     assert item.due.text == '$100.00'
-    assert 3 == self.page.items_list.current_item
+    assert 3 == home_page.items_list.current_item
 
 
 def test_get_item_by_property_name_two_properties(home_page):
@@ -70,7 +70,7 @@ def test_get_item_by_property_name_two_properties(home_page):
 
 def test_get_item_by_property_name_not_match(home_page):
     item = home_page.items_list.get_item_by_property(last_name='Doe', first_name='not match')
-    assert item is not None
+    assert item is None
 
 
 def test_locators(home_page):
@@ -81,7 +81,7 @@ def test_locators(home_page):
     assert locators['last_name'] == ("css selector", "tr:nth-of-type({}) td:nth-of-type(1)".format(current_item))
 
 
-def test_implementation_exception(self):
+def test_implementation_exception():
     class RowItem(Item):
         locators_template = {'name': ('xpath', '//div')}
 
