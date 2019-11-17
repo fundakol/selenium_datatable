@@ -11,13 +11,7 @@ Items list implementation:
 from items_list import Item, Container
 
 class UserItem(Item):
-    pass
-
-class UserItems(Container):
-
-    def __init__(self, how, what):
-        super().__init__(how, what)
-        locators_template = {
+    locators_template = {
             'last_name': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(1)"),
             'first_name': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(2)"),
             'email': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(3)"),
@@ -26,11 +20,11 @@ class UserItems(Container):
             'delete_button': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(6) a[href='#delete']"),
             'edit_button': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(6) a[href='#edit']"),
         }
-        self.item = UserItem(locators_template, self.current_item)
 
-    @property
-    def num_rows(self):
-        return len(self.table.find_elements("css", "tbody > tr"))
+class UserItems(Container):
+    item = UserItem()
+    row_locator = ("css selector", "tbody > tr")
+    headers_locator = ("css selector", "tbody > tr")    
 ```
 
 Example of page object class implementation:
@@ -61,14 +55,14 @@ class TestTable(unittest.TestCase):
     def setUp(self):
         self.driver = Chrome()
 
-    def test_one(self):
+    def test_get_item_from_first_row(self):
         page = HomePage(self.driver)
         page.open()
         item = page.items_list.get_item_by_position(1)
         
-        assert item.first_name.text == 'John'
-        assert item.last_name.text == 'Smith'
-        assert item.email.text == 'jsmith@gmail.com'
+        self.assertEqual(item.first_name.text, 'John')
+        self.assertEqual(item.last_name.text, 'Smith')
+        self.assertEqual(item.email.text, 'jsmith@gmail.com')
 
     def tearDown(self):
             self.driver.close()
