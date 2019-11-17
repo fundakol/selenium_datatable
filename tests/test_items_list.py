@@ -1,10 +1,17 @@
 import unittest
 from os import path
+
 from selenium.webdriver import Chrome, ChromeOptions
 
+from items_list import Item
+from items_list.container import Container
 from tests.page_object import HomePage
 
 URL = path.join(path.abspath(path.join(path.dirname(__file__))), 'index.html')
+
+
+class TestMockServer:
+    pass
 
 
 class TestItemsList(unittest.TestCase):
@@ -40,6 +47,14 @@ class TestItemsList(unittest.TestCase):
         self.assertEqual(item.email.text, 'fbach@yahoo.com')
         self.assertEqual(2, self.page.items_list.current_item)
 
+    def test_get_item_by_row_id_3(self):
+        item = self.page.items_list[2]
+
+        self.assertEqual(item.first_name.text, 'Frank')
+        self.assertEqual(item.last_name.text, 'Bach')
+        self.assertEqual(item.email.text, 'fbach@yahoo.com')
+        self.assertEqual(2, self.page.items_list.current_item)
+
     def test_get_item_by_property_name_one_property(self):
         item = self.page.items_list.get_item_by_property(last_name='Doe')
 
@@ -66,10 +81,22 @@ class TestItemsList(unittest.TestCase):
 
     def test_locators(self):
         locators = self.page.items_list.item.locators
-        assert 'last_name' in locators.keys()
-        assert 'first_name' in locators.keys()
+        self.assertIn('last_name', locators.keys())
+        self.assertIn('first_name', locators.keys())
         current_item = self.page.items_list.current_item
-        assert locators['last_name'] == ("css selector", "tr:nth-of-type({}) td:nth-of-type(1)".format(current_item))
+        self.assertEqual(locators['last_name'], ("css selector", "tr:nth-of-type({}) td:nth-of-type(1)".format(current_item)))
+
+    def test_implementation_exception(self):
+        class RowItem(Item):
+            locators_template = {'name': ('xpath', '//div')}
+
+        class Table(Container):
+            item = RowItem()
+
+        table = Table('xpath', '//table')
+        with self.assertRaises(NotImplementedError):
+            table.get_headers_locator()
+            table.get_row_locator()
 
     def tearDown(self):
         self.driver.close()

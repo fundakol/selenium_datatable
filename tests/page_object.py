@@ -15,16 +15,9 @@ class UserItem(Item):
 
 
 class UserItems(Container):
+    row_locator = (By.CSS_SELECTOR, "tbody > tr")
+    headers_locator = (By.CSS_SELECTOR, "thead > tr > th")
     item = UserItem()
-
-    @property
-    def num_rows(self):
-        return len(self.table.find_elements(By.CSS_SELECTOR, "tbody > tr"))
-
-    @property
-    def headers(self):
-        elements = self.table.find_elements(By.CSS_SELECTOR, "thead > tr > th")
-        return [element.text for element in elements]
 
 
 class HomePage:

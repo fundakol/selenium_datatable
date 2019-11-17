@@ -1,6 +1,12 @@
 import abc
 
 
+def _validate_locators_template(locators_template: dict):
+    assert isinstance(locators_template, dict)
+    for value in locators_template.values():
+        assert isinstance(value, tuple)
+
+
 class Item:
     """Represents a single row on a list"""
 
@@ -20,12 +26,20 @@ class Item:
 
     def __init__(self, item_number: int = 1) -> None:
         self.__locators = dict()
-        self.__validate_locators_template(self.locators_template)
-        self.__item_number = item_number
-        self.update_item_number(item_number)
+        _validate_locators_template(self.locators_template)
+        self.item_number = item_number
 
-    def update_item_number(self, item_number: int) -> dict:
-        self.__item_number = item_number
+    @property
+    def item_number(self) -> int:
+        """Returns row number of the current item"""
+        return self.__item_number
+
+    @item_number.setter
+    def item_number(self, value: int):
+        self.__item_number = value
+        self.update_locators(value)
+
+    def update_locators(self, item_number: int) -> dict:
         self.__locators = {k: (v[0], v[1].format(item_num=item_number))
                            for k, v in self.locators_template.items()}
         return self.__locators
@@ -33,13 +47,3 @@ class Item:
     @property
     def locators(self) -> dict:
         return self.__locators
-
-    @property
-    def item_number(self) -> int:
-        """Returns row number of the current item"""
-        return self.__item_number
-
-    def __validate_locators_template(self, locators_template: dict):
-        assert isinstance(locators_template, dict)
-        for value in locators_template.values():
-            assert isinstance(value, tuple)
