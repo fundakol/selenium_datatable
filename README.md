@@ -1,6 +1,7 @@
 # Items List Pattern
 
 [![Build Status](https://travis-ci.org/fundakol/items-list-pattern.svg?branch=master)](https://travis-ci.org/fundakol/items-list-pattern)
+[![codecov](https://codecov.io/gh/fundakol/items-list-pattern/branch/master/graph/badge.svg)](https://codecov.io/gh/fundakol/items-list-pattern)
 
 Project was created to work with HTML table element
 
