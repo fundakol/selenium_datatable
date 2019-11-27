@@ -18,9 +18,9 @@ python setup.py install
 Items list implementation:
 ```python
 # -- FILE: table.py
-from items_list import Item, Container
+from selenium_datatable import RowItem, Container
 
-class UserItem(Item):
+class UserItem(RowItem):
     locators_template = {
             'last_name': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(1)"),
             'first_name': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(2)"),
@@ -33,7 +33,7 @@ class UserItem(Item):
 
 class UserItems(Container):
     item = UserItem()
-    row_locator = ("css selector", "tbody > tr")
+    rows_locator = ("css selector", "tbody > tr")
     headers_locator = ("css selector", "tbody > tr")    
 ```
 
