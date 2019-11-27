@@ -3,12 +3,16 @@
 [![Build Status](https://travis-ci.org/fundakol/selenium_datatable.svg?branch=master)](https://travis-ci.org/fundakol/selenium_datatable)
 [![codecov](https://codecov.io/gh/fundakol/selenium_datatable/branch/master/graph/badge.svg)](https://codecov.io/gh/fundakol/selenium_datatable)
 
-## Project description
+## Overview
 
 A small library for simplifying a table object in selenium
 
 ## Installation
-
+If you have pip on your system, you can simply install or upgrade the Python bindings:
+```
+pip install selenium_datatable
+```
+Alternately, you can download the source code and run:
 ```
 python setup.py install
 ```
@@ -22,13 +26,13 @@ from selenium_datatable import RowItem, Container
 
 class UserItem(RowItem):
     locators_template = {
-            'last_name': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(1)"),
-            'first_name': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(2)"),
-            'email': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(3)"),
-            'due': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(4)"),
-            'web_site': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(5)"),
-            'delete_button': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(6) a[href='#delete']"),
-            'edit_button': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(6) a[href='#edit']"),
+        'last_name': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(1)"),
+        'first_name': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(2)"),
+        'email': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(3)"),
+        'due': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(4)"),
+        'web_site': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(5)"),
+        'delete_button': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(6) a[href='#delete']"),
+        'edit_button': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(6) a[href='#edit']"),
         }
 
 class UserItems(Container):
