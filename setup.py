@@ -11,7 +11,7 @@ setuptools.setup(
     description="A small library for simplifying a table object in selenium",
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/fundakol/items-list-pattern',
+    url='https://github.com/fundakol/selenium_datatable',
     packages=['items_list'],
     install_requires=['selenium'],
     keywords='selenium table'
