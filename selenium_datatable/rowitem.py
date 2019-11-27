@@ -7,7 +7,7 @@ def _validate_locators_template(locators_template: dict):
         assert isinstance(value, tuple)
 
 
-class Item:
+class RowItem:
     """Represents a single row on a list"""
 
     @property
