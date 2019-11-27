@@ -12,7 +12,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/fundakol/selenium_datatable',
-    packages=['items_list'],
+    packages=['selenium_datatable'],
     install_requires=['selenium'],
     keywords='selenium table'
 )
