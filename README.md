@@ -1,4 +1,4 @@
-# selenium_datatable
+# selenium-datatable
 
 [![Build Status](https://travis-ci.org/fundakol/selenium_datatable.svg?branch=master)](https://travis-ci.org/fundakol/selenium_datatable)
 [![codecov](https://codecov.io/gh/fundakol/selenium_datatable/branch/master/graph/badge.svg)](https://codecov.io/gh/fundakol/selenium_datatable)
@@ -10,7 +10,7 @@ A small library for simplifying a table object in selenium
 ## Installation
 If you have pip on your system, you can simply install or upgrade the Python bindings:
 ```
-pip install selenium_datatable
+pip install selenium-datatable
 ```
 Alternately, you can download the source code and run:
 ```
