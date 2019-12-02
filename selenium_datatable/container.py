@@ -2,41 +2,43 @@ import abc
 from collections.abc import Iterator, Sequence
 from typing import Union
 
-from selenium.common.exceptions import NoSuchElementException
-
 from .rowitem import RowItem
 
 
 _error_msg = 'Attribute "{}" must be implemented as tuple("strategy", "locator")'
 
 
-class Container(abc.ABC, Iterator, Sequence):
+class Container(abc.ABC, Sequence, Iterator):
     """Container class for Items list"""
     rows_locator = None
     headers_locator = None
+
+    def __init__(self, how: str, what: str) -> None:
+        self.table = None
+        self._table_locator: tuple = (how, what)
+        self.current_row: int = 1
 
     @property
     @abc.abstractmethod
     def item(self) -> RowItem:
         """A single row item"""
 
-    def __init__(self, how: str, what: str) -> None:
-        self.__table_locator: tuple = (how, what)
-        self.current_row: int = 1
+    def __repr__(self):
+        return '{}(how="{}", what="{}")'.format(self.__class__.__name__,
+                                                self._table_locator[0],
+                                                self._table_locator[1])
 
     def __get__(self, obj, owner):
-        self.__driver = obj.driver
-        self.table = self.__driver.find_element(*self.__table_locator)
-        return self
-
-    def __iter__(self):
-        self.current_row = 1
+        if not hasattr(obj, 'driver'):
+            raise AttributeError('Implementation error. {}.drive attribute not exist'.format(obj.__class__.__name__))
+        self._driver = obj.driver
+        self.table = self._driver.find_element(*self._table_locator)
         return self
 
     def __next__(self) -> RowItem:
         if self.current_row > len(self):
             self.current_row = 1
-            raise StopIteration
+            raise StopIteration()
         item = self.get_item_by_position(self.current_row)
         self.current_row += 1
         return item
@@ -44,8 +46,8 @@ class Container(abc.ABC, Iterator, Sequence):
     def __len__(self):
         return len(self.table.find_elements(*self.get_rows_locator()))
 
-    def __getitem__(self, item) -> RowItem:
-        return self.get_item_by_position(item + 1)
+    def __getitem__(self, key: Union[int, slice]) -> RowItem:
+        return self.get_item_by_position(key + 1)
 
     @property
     def current_row(self):
@@ -53,19 +55,14 @@ class Container(abc.ABC, Iterator, Sequence):
 
     @current_row.setter
     def current_row(self, value):
-        self.item.update_locators(value)
+        self.item.row_number = value
         self.__current_row = value
 
-    def get_item_by_position(self, row_number: int):
+    def get_item_by_position(self, row_number: int) -> RowItem:
         """Get item from row number (starting from 1)"""
+        if row_number > self.num_rows:
+            raise IndexError()
         self.current_row = row_number
-        self.item.item_number = self.current_row
-        for item_name, locator in self.item.locators.items():
-            try:
-                element = self.table.find_element(*locator)
-            except NoSuchElementException:
-                element = None
-            setattr(self.item, item_name, element)
         return self.item
 
     def get_item_by_property(self, **kwargs) -> Union[RowItem, None]:
@@ -91,12 +88,13 @@ class Container(abc.ABC, Iterator, Sequence):
 
     @property
     def headers(self) -> list:
+        """Return names of columns in the table"""
         elements = self.table.find_elements(*self.get_headers_locator())
         return [element.text for element in elements]
 
     def get_rows_locator(self) -> tuple:
         if self.rows_locator is None:
-            raise NotImplementedError(_error_msg.format("row_locator"))
+            raise NotImplementedError(_error_msg.format("rows_locator"))
         return self.rows_locator
 
     def get_headers_locator(self) -> tuple:
