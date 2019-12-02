@@ -26,13 +26,13 @@ from selenium_datatable import RowItem, Container
 
 class UserItem(RowItem):
     locators_template = {
-        'last_name': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(1)"),
-        'first_name': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(2)"),
-        'email': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(3)"),
-        'due': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(4)"),
-        'web_site': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(5)"),
-        'delete_button': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(6) a[href='#delete']"),
-        'edit_button': ("css", "tr:nth-of-type({item_num}) td:nth-of-type(6) a[href='#edit']"),
+        'last_name': ("css", "tr:nth-of-type({row}) td:nth-of-type(1)"),
+        'first_name': ("css", "tr:nth-of-type({row}) td:nth-of-type(2)"),
+        'email': ("css", "tr:nth-of-type({row}) td:nth-of-type(3)"),
+        'due': ("css", "tr:nth-of-type({row}) td:nth-of-type(4)"),
+        'web_site': ("css", "tr:nth-of-type({row}) td:nth-of-type(5)"),
+        'delete_button': ("css", "tr:nth-of-type({row}) td:nth-of-type(6) a[href='#delete']"),
+        'edit_button': ("css", "tr:nth-of-type({row}) td:nth-of-type(6) a[href='#edit']"),
         }
 
 class UserItems(Container):
