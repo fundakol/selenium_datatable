@@ -2,7 +2,7 @@ import pytest
 from selenium.common.exceptions import NoSuchElementException
 
 from selenium_datatable import Container, RowItem
-from tests.page_object import HomePage, NoTablePage
+from tests.page_object import HomePage, NoTablePage, NoDriverPage
 
 
 URL = 'http://webserver:8000'
@@ -134,3 +134,16 @@ def test_no_such_element_exception(driver):
 def test_attribute_error_exception(home_page):
     with pytest.raises(AttributeError):
         home_page.items_list.get_item_by_property(unknow="test")
+
+
+def test_sequence(home_page):
+    names = "John Frank Jason Tim".split(' ')
+    for row in home_page.items_list:
+        names.remove(row.first_name.text)
+    assert names == []
+
+
+def test_raise_exception_when_no_driver_attribute():
+    page = NoDriverPage()
+    with pytest.raises(AttributeError):
+        page.users_table.get_item_by_position(1)
