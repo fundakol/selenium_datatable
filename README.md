@@ -17,9 +17,9 @@ Alternately, you can download the source code and run:
 python setup.py install
 ```
 
-## Example of use
+## Usage
 
-Items list implementation:
+A table object class implementation:
 ```python
 # -- FILE: table.py
 from selenium_datatable import RowItem, Container
@@ -41,7 +41,7 @@ class UserItems(Container):
     headers_locator = ("css selector", "tbody > tr")    
 ```
 
-Example of page object class implementation:
+A page object class implementation:
 ```python
 # -- FILE: home_page.py
 from table import UserItems
@@ -57,7 +57,7 @@ class HomePage:
         self.driver.get(self.url)
 ```
 
-Use in Unittest:
+Unittest:
 ```python
 # -- FILE: test_table.py
 import unittest
@@ -81,3 +81,12 @@ class TestTable(unittest.TestCase):
     def tearDown(self):
             self.driver.close()
 ```
+The Container class is looking for a "driver" attribute in an owner class, but you can change that behaviour by overiding the attribute _driver_attribute_ from the Container class. 
+
+```python
+class UserItems(Container):
+    item = UserItem()
+    rows_locator = ("css selector", "tbody > tr")
+    headers_locator = ("css selector", "tbody > tr")    
+    driver_attribute = "selenium"
+```  
