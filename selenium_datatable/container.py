@@ -2,8 +2,9 @@ import abc
 from collections.abc import Iterator, Sequence
 from typing import Union
 
-from .rowitem import RowItem
+from selenium.common.exceptions import NoSuchElementException
 
+from .rowitem import RowItem
 
 _error_msg = 'Attribute "{}" must be implemented as tuple("strategy", "locator")'
 
@@ -12,6 +13,7 @@ class Container(abc.ABC, Sequence, Iterator):
     """Container class for Items list"""
     rows_locator = None
     headers_locator = None
+    driver_attrib = "driver"
 
     def __init__(self, how: str, what: str) -> None:
         self.table = None
@@ -29,8 +31,10 @@ class Container(abc.ABC, Sequence, Iterator):
                                                 self._table_locator[1])
 
     def __get__(self, obj, owner):
-        if not hasattr(obj, 'driver'):
-            raise AttributeError('Implementation error. {}.drive attribute not exist'.format(obj.__class__.__name__))
+        if not hasattr(obj, self.driver_attrib):
+            exc_msg = 'Implementation error. Class "{}" has no attribute "{}"'
+            raise AttributeError(exc_msg.format(obj.__class__.__name__,
+                                                self.driver_attrib))
         self._driver = obj.driver
         self.table = self._driver.find_element(*self._table_locator)
         return self
@@ -44,7 +48,10 @@ class Container(abc.ABC, Sequence, Iterator):
         return item
 
     def __len__(self):
-        return len(self.table.find_elements(*self.get_rows_locator()))
+        try:
+            return len(self.table.find_elements(*self.get_rows_locator()))
+        except NoSuchElementException:
+            return 0
 
     def __getitem__(self, key: Union[int, slice]) -> RowItem:
         return self.get_item_by_position(key + 1)

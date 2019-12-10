@@ -2,16 +2,17 @@ import abc
 from typing import Dict
 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.remote.webelement import WebElement
 
 
 def _validate_locators_template(obj, locators_template: dict):
     if not isinstance(locators_template, dict):
-        raise AttributeError("{}.locators_template must by <class 'dict'>. "
-                             "But was {}".format(obj.__class__.__name__, type(locators_template)))
+        raise TypeError("{}.locators_template must by <class 'dict'>. "
+                        "But was {}".format(obj.__class__.__name__, type(locators_template)))
     for value in locators_template.values():
         if not isinstance(value, tuple):
-            raise AttributeError("Value of locators_template dict must be <class 'tuple'>. "
-                                 "But was {}".format(type(value)))
+            raise TypeError("Value of locators_template dict must be <class 'tuple'>. "
+                            "But was {}".format(type(value)))
 
 
 class RowItem:
@@ -45,7 +46,7 @@ class RowItem:
             self.update(self.table)
         return self
 
-    def update(self, table):
+    def update(self, table: WebElement):
         for attr_name, locator in self.locators.items():
             try:
                 element = table.find_element(*locator)
@@ -60,15 +61,15 @@ class RowItem:
         return self.__current_row
 
     @row_number.setter
-    def row_number(self, value: int):
+    def row_number(self, value: int) -> None:
         self.__current_row = value
         self._update_locators(value)
 
-    def _update_locators(self, row_number: int) -> dict:
+    def _update_locators(self, row_number: int) -> Dict[str, tuple]:
         self._locators = {k: (v[0], v[1].format(row=row_number))
                           for k, v in self.locators_template.items()}
         return self._locators
 
     @property
-    def locators(self) -> dict:
+    def locators(self) -> Dict[str, tuple]:
         return self._locators
