@@ -7,7 +7,6 @@ python:
 before_install:
     - pip install codecov
     - export TRAVIS=true
-    - docker pull python:3.6.1
     - docker pull selenium/standalone-chrome:3.141.59-vanadium
     - docker network create test1
     - docker run -d --net test1 --name webserver -p 8000:8000 -v $(pwd)/tests/index.html:/www/index.html python:3.6.1 bash -c "cd /www && python -m http.server"
