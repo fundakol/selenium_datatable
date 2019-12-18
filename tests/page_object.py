@@ -21,19 +21,9 @@ class UsersTable(Container):
 
 
 class HomePage:
-    items_list = UsersTable(By.ID, "table1")
-
-    def __init__(self, driver, url):
-        self.driver = driver
-        self.url = url
-
-    def open(self):
-        self.driver.get(self.url)
-        return self
-
-
-class NoTablePage:
-    items_list = UsersTable(By.ID, "table_does_not_exist")
+    table1 = UsersTable(By.ID, "table1")
+    empty_table = UsersTable(By.ID, "table2")
+    table_does_not_exist = UsersTable(By.ID, "not_exist")
 
     def __init__(self, driver, url):
         self.driver = driver

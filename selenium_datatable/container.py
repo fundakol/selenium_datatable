@@ -1,22 +1,23 @@
 import abc
-from collections.abc import Iterator, Sequence
-from typing import Union
+import collections.abc
+from typing import Union, Iterable, Optional, Tuple
 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.remote.webelement import WebElement
 
 from .rowitem import RowItem
 
 _error_msg = 'Attribute "{}" must be implemented as tuple("strategy", "locator")'
 
 
-class Container(abc.ABC, Sequence, Iterator):
+class Container(abc.ABC, collections.abc.Sequence, collections.abc.Iterator):
     """Container class for Items list"""
-    rows_locator = None
-    headers_locator = None
-    driver_attrib = "driver"
+    rows_locator: Optional[Tuple[str, str]] = None
+    headers_locator: Optional[Tuple[str, str]] = None
+    driver_attrib: str = "driver"
 
     def __init__(self, how: str, what: str) -> None:
-        self.table = None
+        self.table: Optional[WebElement] = None
         self._table_locator: tuple = (how, what)
         self.current_row: int = 1
 
@@ -53,8 +54,8 @@ class Container(abc.ABC, Sequence, Iterator):
         except NoSuchElementException:
             return 0
 
-    def __getitem__(self, key: Union[int, slice]) -> RowItem:
-        return self.get_item_by_position(key + 1)
+    def __getitem__(self, key: Union[int, slice]) -> RowItem:  # type: ignore
+        return self.get_item_by_position(key + 1)  # type: ignore
 
     @property
     def current_row(self):
@@ -65,14 +66,20 @@ class Container(abc.ABC, Sequence, Iterator):
         self.item.row_number = value
         self.__current_row = value
 
-    def get_item_by_position(self, row_number: int) -> RowItem:
-        """Get item from row number (starting from 1)"""
-        if row_number > self.num_rows:
+    def get_item_by_position(self, row: int) -> RowItem:
+        """Get an item from row number (starting from 1)"""
+        if row > self.num_rows:
             raise IndexError()
-        self.current_row = row_number
+        self.current_row = row
         return self.item
 
     def get_item_by_property(self, **kwargs) -> Union[RowItem, None]:
+        for item in self.get_items_by_property(**kwargs):
+            return item
+        return None
+
+    def get_items_by_property(self, **kwargs) -> Iterable[RowItem]:
+        """An iterator"""
         for item in self:
             match = False
             for key, value in kwargs.items():
@@ -85,8 +92,7 @@ class Container(abc.ABC, Sequence, Iterator):
                     match = False
                     break
             if match:
-                return item
-        return None
+                yield item
 
     @property
     def num_rows(self) -> int:
@@ -96,7 +102,7 @@ class Container(abc.ABC, Sequence, Iterator):
     @property
     def headers(self) -> list:
         """Return names of columns in the table"""
-        elements = self.table.find_elements(*self.get_headers_locator())
+        elements = self.table.find_elements(*self.get_headers_locator())  # type: ignore
         return [element.text for element in elements]
 
     def get_rows_locator(self) -> tuple:

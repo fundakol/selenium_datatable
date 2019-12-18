@@ -5,7 +5,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.remote.webelement import WebElement
 
 
-def _validate_locators_template(obj, locators_template: dict):
+def _validate_locators_template(obj: 'RowItem', locators_template: dict):
     if not isinstance(locators_template, dict):
         raise TypeError("{}.locators_template must by <class 'dict'>. "
                         "But was {}".format(obj.__class__.__name__, type(locators_template)))
@@ -21,7 +21,7 @@ class RowItem:
     def __init__(self, row_number: int = 1) -> None:
         self._locators: Dict[str, tuple] = dict()
         _validate_locators_template(self, self.locators_template)
-        self.row_number = row_number
+        self.row_number: int = row_number
 
     def __repr__(self):
         return '{}(row_number="{}")'.format(self.__class__.__name__, self.row_number)

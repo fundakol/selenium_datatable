@@ -2,7 +2,7 @@ import pytest
 from selenium.common.exceptions import NoSuchElementException
 
 from selenium_datatable import Container, RowItem
-from tests.page_object import HomePage, NoTablePage, NoDriverPage
+from tests.page_object import HomePage, NoDriverPage
 
 
 URL = 'http://webserver:8000'
@@ -21,6 +21,10 @@ def test_get_headers(home_page):
 def test_num_of_items(home_page):
     assert home_page.items_list.num_rows == 4
     assert len(home_page.items_list) == 4
+
+
+def test_num_of_items_in_empty_table(home_page):
+    assert len(home_page.empty_table) == 0
 
 
 def test_get_item_by_row_id_1(home_page):
@@ -124,11 +128,9 @@ def test_implementation_exception_for_rows_locator(driver):
         page.table.get_rows_locator()
 
 
-def test_no_such_element_exception(driver):
-    page = NoTablePage(driver, URL)
-
+def test_no_such_element_exception(driver, home_page):
     with pytest.raises(NoSuchElementException):
-        page.items_list.get_item_by_position(100)
+        home_page.table_does_not_exist.get_item_by_position(100)
 
 
 def test_attribute_error_exception(home_page):
