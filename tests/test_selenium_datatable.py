@@ -15,12 +15,12 @@ def home_page(driver):
 
 def test_get_headers(home_page):
     expected_headers = ['Last Name', 'First Name', 'Email', 'Due', 'Web Site', 'Action']
-    assert home_page.items_list.headers == expected_headers
+    assert home_page.table1.headers == expected_headers
 
 
 def test_num_of_items(home_page):
-    assert home_page.items_list.num_rows == 4
-    assert len(home_page.items_list) == 4
+    assert home_page.table1.num_rows == 4
+    assert len(home_page.table1) == 4
 
 
 def test_num_of_items_in_empty_table(home_page):
