@@ -28,44 +28,44 @@ def test_num_of_items_in_empty_table(home_page):
 
 
 def test_get_item_by_row_id_1(home_page):
-    item = home_page.items_list.get_item_by_position(1)
+    item = home_page.table1.get_item_by_position(1)
 
     assert item.first_name.text == 'John'
     assert item.last_name.text == 'Smith'
     assert item.email.text == 'jsmith@gmail.com'
-    assert home_page.items_list.current_row == 1
+    assert home_page.table1.current_row == 1
 
 
 def test_get_item_by_row_id_2(home_page):
-    item = home_page.items_list.get_item_by_position(2)
+    item = home_page.table1.get_item_by_position(2)
 
     assert item.first_name.text == 'Frank'
     assert item.last_name.text == 'Bach'
     assert item.email.text == 'fbach@yahoo.com'
-    assert home_page.items_list.current_row == 2
+    assert home_page.table1.current_row == 2
 
 
 def test_get_item_by_index_1(home_page):
-    item = home_page.items_list[1]
+    item = home_page.table1[1]
 
     assert item.first_name.text == 'Frank'
     assert item.last_name.text == 'Bach'
     assert item.email.text == 'fbach@yahoo.com'
-    assert home_page.items_list.current_row == 2
+    assert home_page.table1.current_row == 2
 
 
 def test_get_last_item_by_index_2(home_page):
-    item = home_page.items_list[3]
+    item = home_page.table1[3]
 
     assert (item.first_name.text, item.last_name.text) == ('Tim', 'Conway')
     assert item.first_name.text == 'Tim'
     assert item.last_name.text == 'Conway'
     assert item.email.text == 'tconway@earthlink.net'
-    assert home_page.items_list.current_row == 4
+    assert home_page.table1.current_row == 4
 
 
 def test_get_item_by_property_name_one_property(home_page):
-    item = home_page.items_list.get_item_by_property(last_name='Doe')
+    item = home_page.table1.get_item_by_property(last_name='Doe')
 
     assert item is not None
     assert item.first_name.text == 'Jason'
@@ -75,7 +75,7 @@ def test_get_item_by_property_name_one_property(home_page):
 
 
 def test_get_item_by_property_name_two_properties(home_page):
-    item = home_page.items_list.get_item_by_property(last_name='Doe', first_name='Jason')
+    item = home_page.table1.get_item_by_property(last_name='Doe', first_name='Jason')
 
     assert item is not None
     assert item.first_name.text == 'Jason'
@@ -85,13 +85,13 @@ def test_get_item_by_property_name_two_properties(home_page):
 
 
 def test_get_item_by_property_name_not_match(home_page):
-    item = home_page.items_list.get_item_by_property(last_name='Doe', first_name='not match')
+    item = home_page.table1.get_item_by_property(last_name='Doe', first_name='not match')
     assert item is None
 
 
 def test_locators(home_page):
-    home_page.items_list.current_row = 1
-    locators = home_page.items_list.item.locators
+    home_page.table1.current_row = 1
+    locators = home_page.table1.item.locators
     assert 'last_name' in locators.keys()
     assert 'first_name' in locators.keys()
     assert locators['last_name'] == ("css selector", "tr:nth-of-type(1) td:nth-of-type(1)")
@@ -135,12 +135,12 @@ def test_no_such_element_exception(driver, home_page):
 
 def test_attribute_error_exception(home_page):
     with pytest.raises(AttributeError):
-        home_page.items_list.get_item_by_property(unknow="test")
+        home_page.table1.get_item_by_property(unknow="test")
 
 
 def test_sequence(home_page):
     names = "John Frank Jason Tim".split(' ')
-    for row in home_page.items_list:
+    for row in home_page.table1:
         names.remove(row.first_name.text)
     assert names == []
 
