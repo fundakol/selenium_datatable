@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/fundakol/selenium_datatable.svg?branch=master)](https://travis-ci.org/fundakol/selenium_datatable)
 [![codecov](https://codecov.io/gh/fundakol/selenium_datatable/branch/master/graph/badge.svg)](https://codecov.io/gh/fundakol/selenium_datatable)
+[![PyPi](https://img.shields.io/pypi/v/selenium-datatable.png)](https://pypi.python.org/pypi/selenium-datatable)
 
 ## Overview
 
