@@ -13,6 +13,7 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     url='https://github.com/fundakol/selenium_datatable',
     packages=['selenium_datatable'],
+    python_requires='>=3.6',
     install_requires=['selenium'],
     keywords='selenium table',
     classifiers=[
