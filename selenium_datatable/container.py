@@ -1,6 +1,6 @@
 import abc
 import collections.abc
-from typing import Union, Iterable, Optional, Tuple
+from typing import Union, Iterable, Optional, Tuple, List
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.remote.webelement import WebElement
@@ -58,11 +58,11 @@ class Container(abc.ABC, collections.abc.Sequence, collections.abc.Iterator):
         return self.get_item_by_position(key + 1)  # type: ignore
 
     @property
-    def current_row(self):
+    def current_row(self) -> int:
         return self.__current_row
 
     @current_row.setter
-    def current_row(self, value):
+    def current_row(self, value: int) -> None:
         self.item.row_number = value
         self.__current_row = value
 
@@ -100,7 +100,7 @@ class Container(abc.ABC, collections.abc.Sequence, collections.abc.Iterator):
         return self.__len__()
 
     @property
-    def headers(self) -> list:
+    def headers(self) -> List[str]:
         """Return names of columns in the table"""
         elements = self.table.find_elements(*self.get_headers_locator())  # type: ignore
         return [element.text for element in elements]
