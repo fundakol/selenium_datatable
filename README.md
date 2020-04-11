@@ -69,15 +69,26 @@ class TestTable(unittest.TestCase):
 
     def setUp(self):
         self.driver = Chrome()
+        self.page = HomePage(self.driver)
+        self.page.open()
 
-    def test_get_item_from_first_row(self):
-        page = HomePage(self.driver)
-        page.open()
-        item = page.items_list.get_item_by_position(1)
-        
+    def test_get_item_from_first_row(self):        
+        item = self.page.items_list.get_item_by_position(1)        
         self.assertEqual(item.first_name.text, 'John')
         self.assertEqual(item.last_name.text, 'Smith')
         self.assertEqual(item.email.text, 'jsmith@gmail.com')
+    
+    def test_get_item_by_property(self):
+        item = self.page.items_list.get_item_by_property(last_name='Doe', first_name='Jason')    
+        assert item.first_name.text == 'Jason'
+        assert item.last_name.text == 'Doe'
+    
+    def test_number_of_rows(self):
+        assert len(self.page.items_list) == 4
+    
+    def test_iterate_through_rows(self):
+        for row in self.page.items_list:
+            assert hasattr(row, 'name') 
 
     def tearDown(self):
         self.driver.close()
@@ -90,4 +101,4 @@ class UserItems(Container):
     rows_locator = ("css selector", "tbody > tr")
     headers_locator = ("css selector", "tbody > tr")    
     driver_attribute = "selenium"
-```  
+``` 
