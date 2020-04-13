@@ -23,32 +23,29 @@ python setup.py install
 A table object class implementation:
 ```python
 # -- FILE: table.py
-from selenium_datatable import RowItem, Container
+from selenium.webdriver.common.by import By
+from selenium_datatable import DataTable, Column
 
-class UserItem(RowItem):
-    locators_template = {
-        'last_name': ("css", "tr:nth-of-type({row}) td:nth-of-type(1)"),
-        'first_name': ("css", "tr:nth-of-type({row}) td:nth-of-type(2)"),
-        'email': ("css", "tr:nth-of-type({row}) td:nth-of-type(3)"),
-        'due': ("css", "tr:nth-of-type({row}) td:nth-of-type(4)"),
-        'web_site': ("css", "tr:nth-of-type({row}) td:nth-of-type(5)"),
-        'delete_button': ("css", "tr:nth-of-type({row}) td:nth-of-type(6) a[href='#delete']"),
-        'edit_button': ("css", "tr:nth-of-type({row}) td:nth-of-type(6) a[href='#edit']"),
-        }
-
-class UserItems(Container):
-    item = UserItem()
-    rows_locator = ("css selector", "tbody > tr")
-    headers_locator = ("css selector", "tbody > tr")    
+class UsersTable(DataTable):
+    rows_locator = (By.CSS_SELECTOR, "tbody > tr")
+    headers_locator = (By.CSS_SELECTOR, "thead > tr > th")
+    # columns
+    last_name = Column(By.CSS_SELECTOR, "tr:nth-of-type({row}) td:nth-of-type(1)")
+    first_name = Column(By.CSS_SELECTOR, "tr:nth-of-type({row}) td:nth-of-type(2)")
+    email = Column(By.CSS_SELECTOR, "tr:nth-of-type({row}) td:nth-of-type(3)")
+    due = Column(By.CSS_SELECTOR, "tr:nth-of-type({row}) td:nth-of-type(4)")
+    web_site = Column(By.CSS_SELECTOR, "tr:nth-of-type({row}) td:nth-of-type(5)")
+    delete_button = Column(By.CSS_SELECTOR, "tr:nth-of-type({row}) td:nth-of-type(6) a[href='#delete']")
+    edit_button = Column(By.CSS_SELECTOR, "tr:nth-of-type({row}) td:nth-of-type(6) a[href='#edit']")
 ```
 
 A page object class implementation:
 ```python
 # -- FILE: home_page.py
-from table import UserItems
+from table import UsersTable
 
 class HomePage:    
-    items_list = UserItems("id", "table1")
+    items_list = UsersTable("id", "table1")
    
     def __init__(self, driver, url='http://localhost/tables'):
         self.driver = driver
@@ -69,15 +66,26 @@ class TestTable(unittest.TestCase):
 
     def setUp(self):
         self.driver = Chrome()
+        self.page = HomePage(self.driver)
+        self.page.open()
 
-    def test_get_item_from_first_row(self):
-        page = HomePage(self.driver)
-        page.open()
-        item = page.items_list.get_item_by_position(1)
-        
+    def test_get_item_from_first_row(self):        
+        item = self.page.items_list.get_item_by_position(1)        
         self.assertEqual(item.first_name.text, 'John')
         self.assertEqual(item.last_name.text, 'Smith')
         self.assertEqual(item.email.text, 'jsmith@gmail.com')
+    
+    def test_get_item_by_property(self):
+        item = self.page.items_list.get_item_by_property(last_name='Doe', first_name='Jason')    
+        assert item.first_name.text == 'Jason'
+        assert item.last_name.text == 'Doe'
+    
+    def test_number_of_rows(self):
+        assert len(self.page.items_list) == 4
+    
+    def test_iterate_through_rows(self):
+        for row in self.page.items_list:
+            assert hasattr(row, 'name') 
 
     def tearDown(self):
         self.driver.close()
@@ -90,4 +98,4 @@ class UserItems(Container):
     rows_locator = ("css selector", "tbody > tr")
     headers_locator = ("css selector", "tbody > tr")    
     driver_attribute = "selenium"
-```  
+``` 
