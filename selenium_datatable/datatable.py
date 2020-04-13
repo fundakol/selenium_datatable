@@ -1,15 +1,8 @@
-import abc
-import collections.abc
-import copy
-from typing import Union, Iterable, Optional, Tuple, List, Callable
-from collections import namedtuple
+from typing import Union, Iterable, Optional, Tuple, List
 import copy
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.support.wait import WebDriverWait
-
-from .rowitem import RowItem
 
 _error_msg = 'Attribute "{}" must be implemented as tuple("strategy", "locator")'
 
@@ -41,7 +34,8 @@ class Columns:
         self._table: WebElement = table
 
     def __repr__(self):
-        return 'Column(row="{}", columns={!r})'.format(self.row, self.columns.keys())
+        return '{}(row="{}", columns={!r})'.format(self.__class__.__name__,
+                                                   self.row, self.columns.keys())
 
     def __getattr__(self, name):
         if name in self.columns:
@@ -65,7 +59,7 @@ class TableMetaclass(type):
         return cls
 
 
-class TableContainer(metaclass=TableMetaclass):
+class DataTable(metaclass=TableMetaclass):
     rows_locator: Tuple[str, str] = None
     headers_locator: Tuple[str, str] = None
     driver_attrib: str = "driver"
@@ -73,7 +67,7 @@ class TableContainer(metaclass=TableMetaclass):
     def __init__(self, how: str, what: str) -> None:
         self._table: Optional[WebElement] = None
         self._table_locator: Tuple[str, str] = (how, what)
-        self.current_row: int = 0
+        self.current_row: int = 1
 
     def __repr__(self):
         return '{}(how="{}", what="{}")'.format(self.__class__.__name__,
@@ -90,16 +84,16 @@ class TableContainer(metaclass=TableMetaclass):
         return self
 
     def __getitem__(self, index):
-        if index >= len(self):
-            raise IndexError
-        return Columns(index + 1, self._columns, self._table)
+        if 0 <= index < len(self):
+            return Columns(index + 1, self._columns, self._table)
+        raise IndexError
 
     def __next__(self):
         if self.current_row > len(self):
-            self.current_row = 0
+            self.__current_row = 0
             raise StopIteration()
-        item = self.__getitem__(self.current_row)
-        self.current_row += 1
+        item = self.__getitem__(self.__current_row)
+        self.__current_row += 1
         return item
 
     def __len__(self):
@@ -114,22 +108,23 @@ class TableContainer(metaclass=TableMetaclass):
 
     @current_row.setter
     def current_row(self, value: int) -> None:
+        if value < 1:
+            raise ValueError('current_row cannot be less then 1')
         self.__current_row = value - 1
 
-    # TODO: rename to get_row_by_position
     def get_item_by_position(self, row: int):
-        return self.__getitem__(row)
+        """Return item from the row."""
+        self.current_row = row
+        return self.__getitem__(self.__current_row)
 
-    # TODO: rename to get_row_by_property
-    def get_item_by_property(self, **kwargs) -> Union[RowItem, None]:
+    def get_item_by_property(self, **kwargs) -> Union[Columns, None]:
+        """Return first row matching given properties"""
         for item in self.get_items_by_property(**kwargs):
             return item
-        # raise AttributeError
         return None
 
-    # TODO: rename to iter_rows_by_property
-    def get_items_by_property(self, **kwargs) -> Iterable[RowItem]:
-        """An iterator"""
+    def get_items_by_property(self, **kwargs) -> Iterable[Columns]:
+        """Iterate over rows and return every row matching given properties"""
         for item in self:
             match = False
             for key, value in kwargs.items():
@@ -151,13 +146,13 @@ class TableContainer(metaclass=TableMetaclass):
 
     @property
     def headers(self) -> List[str]:
-        """Return names of columns in the table"""
+        """Return names of columns in header row in the table"""
         elements = self._table.find_elements(*self.get_headers_locator())  # type: ignore
         return [element.text for element in elements]
 
     @property
     def columns(self) -> List[str]:
-        """Return names of columns in the table"""
+        """Return names of defined columns"""
         return list(self._columns.items())
 
     def get_rows_locator(self) -> tuple:

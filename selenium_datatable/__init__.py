@@ -1,10 +1,10 @@
 from .container import Container
 from .rowitem import RowItem
-from .table_container import TableContainer, Column
+from .datatable import DataTable, Column
 
 __all__ = [
     'Container',
     'RowItem',
-    'TableContainer',
+    'DataTable',
     'Column',
 ]

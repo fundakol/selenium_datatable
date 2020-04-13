@@ -2,13 +2,13 @@ import pytest
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 
-from selenium_datatable import TableContainer, Column
+from selenium_datatable import DataTable, Column
 
 
 URL = 'http://webserver:8000'
 
 
-class UsersTable(TableContainer):
+class UsersTable(DataTable):
     rows_locator = (By.CSS_SELECTOR, "tbody > tr")
     headers_locator = (By.CSS_SELECTOR, "thead > tr > th")
     last_name = Column(By.CSS_SELECTOR, "tr:nth-of-type({row}) td:nth-of-type(1)")
