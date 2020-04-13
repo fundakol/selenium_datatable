@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='selenium_datatable',
-    version='0.2.2',
+    version='0.3.0',
     author='Łukasz Fundakowski',
     author_email='fundakol@yahoo.com',
     description="A small library for simplifying a table object in selenium",
