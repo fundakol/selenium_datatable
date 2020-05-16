@@ -109,3 +109,12 @@ def test_sequence(home_page):
     for row in home_page.table1:
         names.remove(row.first_name.text)
     assert names == []
+
+
+def test_iter_table(home_page):
+    users = [row for row in home_page.table1]
+    assert len(users) == 4
+    assert users[0].first_name.text == "John"
+    assert users[1].first_name.text == "Frank"
+    assert users[2].first_name.text == "Jason"
+    assert users[3].first_name.text == "Tim"

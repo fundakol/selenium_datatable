@@ -85,7 +85,7 @@ class TestTable(unittest.TestCase):
     
     def test_iterate_through_rows(self):
         for row in self.page.items_list:
-            assert hasattr(row, 'name') 
+            assert hasattr(row, 'last_name') 
 
     def tearDown(self):
         self.driver.close()
