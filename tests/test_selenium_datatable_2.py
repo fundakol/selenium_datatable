@@ -118,3 +118,10 @@ def test_comprehension_list(home_page):
     assert users[1].first_name.text == "Frank"
     assert users[2].first_name.text == "Jason"
     assert users[3].first_name.text == "Tim"
+
+
+def test_comprehension_list_slice(home_page):
+    users = [row for row in home_page.table1[1:3]]
+    assert len(users) == 2
+    assert users[0].first_name.text == "Frank"
+    assert users[1].first_name.text == "Jason"

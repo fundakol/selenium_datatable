@@ -77,15 +77,21 @@ class TestTable(unittest.TestCase):
     
     def test_get_item_by_property(self):
         item = self.page.items_list.get_item_by_property(last_name='Doe', first_name='Jason')    
-        assert item.first_name.text == 'Jason'
-        assert item.last_name.text == 'Doe'
+        self.assertEqual(item.first_name.text, 'Jason')
+        self.assertEqual(item.last_name.text, 'Doe')
     
     def test_number_of_rows(self):
         assert len(self.page.items_list) == 4
     
     def test_iterate_through_rows(self):
         for row in self.page.items_list:
-            assert hasattr(row, 'last_name') 
+            self.assertTrue(hasattr(row, 'last_name')) 
+    
+    def test_comprehension_list_slice(self):
+        users = [row for row in self.page.items_list[1:3]]
+        self.assertEqual(len(users), 2)
+        self.assertEqual(users[0].first_name.text, "Frank")
+        self.assertEqual(users[1].first_name.text, "Jason")
 
     def tearDown(self):
         self.driver.close()

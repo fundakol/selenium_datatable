@@ -84,9 +84,17 @@ class DataTable(metaclass=TableMetaclass):
         return self
 
     def __getitem__(self, index):
-        if 0 <= index < len(self):
-            return Columns(index + 1, self._columns, self._table)
-        raise IndexError
+        if isinstance(index, slice):
+            start, stop, step = index.indices(len(self))
+            return [Columns(i + 1, self._columns, self._table)
+                    for i in range(start, stop, step)]
+        elif isinstance(index, int):
+            if 0 <= index < len(self):
+                return Columns(index + 1, self._columns, self._table)
+            else:
+                raise IndexError
+        else:
+            raise TypeError('Invalid argument type: {}'.format(type(index)))
 
     def __next__(self):
         if self.current_row > len(self):
