@@ -111,7 +111,7 @@ def test_sequence(home_page):
     assert names == []
 
 
-def test_iter_table(home_page):
+def test_comprehension_list(home_page):
     users = [row for row in home_page.table1]
     assert len(users) == 4
     assert users[0].first_name.text == "John"

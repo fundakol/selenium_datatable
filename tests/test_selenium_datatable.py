@@ -145,6 +145,15 @@ def test_sequence(home_page):
     assert names == []
 
 
+def test_comprehension_list(home_page):
+    users = [row for row in home_page.table1]
+    assert len(users) == 4
+    assert users[0].first_name.text == "John"
+    assert users[1].first_name.text == "Frank"
+    assert users[2].first_name.text == "Jason"
+    assert users[3].first_name.text == "Tim"
+
+
 def test_raise_exception_when_no_driver_attribute():
     page = NoDriverPage()
     with pytest.raises(AttributeError):

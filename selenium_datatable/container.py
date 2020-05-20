@@ -1,5 +1,6 @@
 import abc
 import collections.abc
+import copy
 from typing import Union, Iterable, Optional, Tuple, List
 
 from selenium.common.exceptions import NoSuchElementException
@@ -71,7 +72,7 @@ class Container(abc.ABC, collections.abc.Sequence, collections.abc.Iterator):
         if row > self.num_rows:
             raise IndexError()
         self.current_row = row
-        return self.item
+        return copy.copy(self.item)
 
     def get_item_by_property(self, **kwargs) -> Union[RowItem, None]:
         for item in self.get_items_by_property(**kwargs):
