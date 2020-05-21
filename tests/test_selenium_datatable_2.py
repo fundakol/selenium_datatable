@@ -18,6 +18,7 @@ class UsersTable(DataTable):
     web_site = Column(By.CSS_SELECTOR, "tr:nth-of-type({row}) td:nth-of-type(5)")
     delete_button = Column(By.CSS_SELECTOR, "tr:nth-of-type({row}) td:nth-of-type(6) a[href='#delete']")
     edit_button = Column(By.CSS_SELECTOR, "tr:nth-of-type({row}) td:nth-of-type(6) a[href='#edit']")
+    cancel_button = Column(By.CSS_SELECTOR, "tr:nth-of-type({row}) td:nth-of-type(6) a[href='#cancel']")
 
 
 class HomePage:
@@ -67,6 +68,13 @@ def test_get_item_from_second_row(home_page):
     assert item.first_name.text == 'Frank'
     assert item.last_name.text == 'Bach'
     assert item.email.text == 'fbach@yahoo.com'
+
+
+def test_item_with_none_column(home_page):
+    item = home_page.table1[0]
+
+    assert item.first_name.text == 'John'
+    assert item.cancel_button == None
 
 
 def test_get_item_by_property_name_one_property(home_page):

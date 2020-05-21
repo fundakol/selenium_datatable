@@ -41,7 +41,10 @@ class Columns:
         if name in self.columns:
             column_item = copy.copy(self.columns[name])
             column_item.update_locator(self.row)
-            return self._table.find_element(*column_item.locator)
+            try:
+                return self._table.find_element(*column_item.locator)
+            except NoSuchElementException:
+                return None
         raise AttributeError(name)
 
 
