@@ -48,7 +48,7 @@ class Columns:
         raise AttributeError(name)
 
 
-class TableMetaclass(type):
+class _TableMetaclass(type):
 
     def __new__(mcs, new, bases, attrs):
         _columns = dict()
@@ -62,7 +62,7 @@ class TableMetaclass(type):
         return cls
 
 
-class DataTable(metaclass=TableMetaclass):
+class DataTable(metaclass=_TableMetaclass):
     rows_locator: Tuple[str, str] = None
     headers_locator: Tuple[str, str] = None
     driver_attrib: str = "driver"
