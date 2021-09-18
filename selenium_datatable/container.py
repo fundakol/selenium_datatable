@@ -1,6 +1,7 @@
 import abc
 import collections.abc
 import copy
+import warnings
 from typing import Union, Iterable, Optional, Tuple, List
 
 from selenium.common.exceptions import NoSuchElementException
@@ -9,6 +10,8 @@ from selenium.webdriver.remote.webelement import WebElement
 from .rowitem import RowItem
 
 _error_msg = 'Attribute "{}" must be implemented as tuple("strategy", "locator")'
+
+warnings.warn(f'Module {__name__} is deprecated.', DeprecationWarning)
 
 
 class Container(abc.ABC, collections.abc.Sequence, collections.abc.Iterator):
@@ -98,7 +101,7 @@ class Container(abc.ABC, collections.abc.Sequence, collections.abc.Iterator):
     @property
     def num_rows(self) -> int:
         """Return a number of rows in the table"""
-        return self.__len__()
+        return len(self)
 
     @property
     def headers(self) -> List[str]:

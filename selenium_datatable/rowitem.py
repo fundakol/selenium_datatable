@@ -1,8 +1,11 @@
 import abc
+import warnings
 from typing import Dict
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.remote.webelement import WebElement
+
+warnings.warn('Module is deprecated.', DeprecationWarning)
 
 
 def _validate_locators_template(obj: 'RowItem', locators_template: dict):
