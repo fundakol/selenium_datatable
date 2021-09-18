@@ -4,5 +4,6 @@ requires = [
     "wheel",
     "setuptools_scm"
 ]
+build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
