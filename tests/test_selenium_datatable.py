@@ -5,12 +5,9 @@ from selenium_datatable import Container, RowItem
 from tests.page_object import HomePage, NoDriverPage
 
 
-URL = 'http://webserver:8000'
-
-
 @pytest.fixture(scope='function')
-def home_page(driver):
-    return HomePage(driver, URL).open()
+def home_page(driver, url):
+    return HomePage(driver, url).open()
 
 
 def test_get_headers(home_page):
@@ -109,7 +106,7 @@ def test_implementation_exception_for_headers_locator():
         table.get_headers_locator()
 
 
-def test_implementation_exception_for_rows_locator(driver):
+def test_implementation_exception_for_rows_locator(driver, url):
     class User(RowItem):
         locators_template = {'name': ('xpath', '//div')}
 
@@ -123,7 +120,7 @@ def test_implementation_exception_for_rows_locator(driver):
             self.driver = driver_
             self.url = url
 
-    page = Page(driver, URL)
+    page = Page(driver, url)
     with pytest.raises(NotImplementedError):
         page.table.get_rows_locator()
 
