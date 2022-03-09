@@ -1,17 +1,31 @@
-name: Bump version
 on:
   push:
     branches:
-      - master
+    - master
+  pull_request:
+    branches:
+    - master
+
+name: Test
+
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+    services:
+      selenium:
+        image: selenium/standalone-chrome
+    name: Test
+    strategy:
+      matrix:
+        python-version: [ "3.6", "3.7", "3.8", "3.9" ]
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
+    - name: Setup python
+      id: test
+      uses: actions/setup-python@v1
       with:
-        fetch-depth: '0'
-    - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@1.36.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        WITH_V: false
+        python-version: "${{ matrix.python-version }}"
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+    - name: Tests
+      run: pytest tests -vv
