@@ -1,7 +1,6 @@
 # selenium-datatable
 
-[![Build Status](https://travis-ci.org/fundakol/selenium_datatable.svg?branch=master)](https://travis-ci.org/fundakol/selenium_datatable)
-[![codecov](https://codecov.io/gh/fundakol/selenium_datatable/branch/master/graph/badge.svg)](https://codecov.io/gh/fundakol/selenium_datatable)
+[![Test](https://github.com/fundakol/selenium_datatable/actions/workflows/main.yml/badge.svg)](https://github.com/fundakol/selenium_datatable/actions/workflows/main.yml)
 [![PyPi](https://img.shields.io/pypi/v/selenium-datatable.png)](https://pypi.python.org/pypi/selenium-datatable)
 
 ## Overview
