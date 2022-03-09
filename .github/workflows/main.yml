@@ -9,20 +9,23 @@ on:
 name: Test
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     services:
       selenium:
         image: selenium/standalone-chrome
     name: Test
+    strategy:
+      matrix:
+        python-version: [ "3.6", "3.7", "3.8", "3.9" ]
     steps:
     - uses: actions/checkout@v2
-    - name: Run tests
+    - name: Setup python
       id: test
-      uses: fedora-python/tox-github-action@master
+      uses: actions/setup-python@v1
       with:
-        python-version: 3.6, 3.7, 3.8, 3.9
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-      - name: Test with pytest
-        run: pytest -vv
+        python-version: "${{ matrix.python-version }}"
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+    - name: Test
+      run: pytest tests -vv
