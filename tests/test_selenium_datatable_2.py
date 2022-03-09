@@ -2,10 +2,7 @@ import pytest
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 
-from selenium_datatable import DataTable, Column
-
-
-URL = 'http://webserver:8000'
+from selenium_datatable import Column, DataTable
 
 
 class UsersTable(DataTable):
@@ -36,8 +33,8 @@ class HomePage:
 
 
 @pytest.fixture(scope='function')
-def home_page(driver):
-    return HomePage(driver, URL).open()
+def home_page(driver, url):
+    return HomePage(driver, url).open()
 
 
 def test_get_headers(home_page):
