@@ -1,17 +1,28 @@
-name: Bump version
 on:
   push:
     branches:
-      - master
+    - master
+  pull_request:
+    branches:
+    - master
+
+name: Test
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      selenium:
+        image: selenium/standalone-chrome
+    name: Test
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
+    - name: Run tests
+      id: test
+      uses: fedora-python/tox-github-action@master
       with:
-        fetch-depth: '0'
-    - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@1.36.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        WITH_V: false
+        python-version: 3.6, 3.7, 3.8, 3.9
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Test with pytest
+        run: pytest -vv
