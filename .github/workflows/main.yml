@@ -11,6 +11,7 @@ name: Test
 jobs:
   test:
     runs-on: ubuntu-latest
+    needs: flake8-lint
     services:
       selenium:
         image: selenium/standalone-chrome
@@ -29,3 +30,46 @@ jobs:
       run: pip install -r requirements.txt
     - name: Test
       run: pytest tests -vv
+
+  coverage:
+    runs-on: ubuntu-latest
+    needs: flake8-lint
+    services:
+      selenium:
+        image: selenium/standalone-chrome
+    steps:
+    - uses: actions/checkout@master
+    - name: Setup Python
+      uses: actions/setup-python@master
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+    - name: Generate coverage report
+      run: pytest --cov=selenium_datatable --cov-report=xml
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v2
+      with:
+        directory: ./coverage/reports/
+        fail_ci_if_error: true
+        files: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        path_to_write_report: ./coverage/codecov_report.txt
+        verbose: true
+
+  flake8-lint:
+    runs-on: ubuntu-latest
+    name: Lint
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v2
+      - name: Set up Python environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: flake8 Lint
+        uses: py-actions/flake8@v2
+        with:
+          max-line-length: "120"
+          path: ./selenium_datatable
