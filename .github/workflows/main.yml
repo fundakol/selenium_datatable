@@ -47,6 +47,8 @@ jobs:
       run: pip install -r requirements.txt
     - name: Generate coverage report
       run: pytest --cov=selenium_datatable --cov-report=xml
+    - name: Set banch name
+      run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/})"
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
       if: ${BRANCH_NAME} == 'master'
