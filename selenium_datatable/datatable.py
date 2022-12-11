@@ -65,7 +65,7 @@ class _TableMetaclass(type):
 class DataTable(metaclass=_TableMetaclass):
     rows_locator: Tuple[str, str] = None
     headers_locator: Tuple[str, str] = None
-    driver_attrib: str = "driver"
+    driver_attrib: str = 'driver'
 
     def __init__(self, how: str, what: str) -> None:
         self._table: Optional[WebElement] = None
@@ -158,7 +158,8 @@ class DataTable(metaclass=_TableMetaclass):
     @property
     def headers(self) -> List[str]:
         """Return names of columns in header row in the table"""
-        elements = self._table.find_elements(*self.get_headers_locator())  # type: ignore
+        elements = self._table.find_elements(
+            *self.get_headers_locator())  # type: ignore
         return [element.text for element in elements]
 
     @property
@@ -168,10 +169,10 @@ class DataTable(metaclass=_TableMetaclass):
 
     def get_rows_locator(self) -> tuple:
         if self.rows_locator is None:
-            raise NotImplementedError(_error_msg.format("rows_locator"))
+            raise NotImplementedError(_error_msg.format('rows_locator'))
         return self.rows_locator
 
     def get_headers_locator(self) -> tuple:
         if self.headers_locator is None:
-            raise NotImplementedError(_error_msg.format("headers_locator"))
+            raise NotImplementedError(_error_msg.format('headers_locator'))
         return self.headers_locator
