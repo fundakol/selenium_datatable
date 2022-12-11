@@ -44,13 +44,13 @@ A page object class implementation:
 # -- FILE: home_page.py
 from table import UsersTable
 
-class HomePage:    
+class HomePage:
     items_list = UsersTable("id", "table1")
-   
+
     def __init__(self, driver, url='http://localhost/tables'):
         self.driver = driver
-        self.url = url           
-        
+        self.url = url
+
     def open(self):
         self.driver.get(self.url)
 ```
@@ -69,24 +69,24 @@ class TestTable(unittest.TestCase):
         self.page = HomePage(self.driver)
         self.page.open()
 
-    def test_get_item_from_first_row(self):        
-        item = self.page.items_list.get_item_by_position(1)        
+    def test_get_item_from_first_row(self):
+        item = self.page.items_list.get_item_by_position(1)
         self.assertEqual(item.first_name.text, 'John')
         self.assertEqual(item.last_name.text, 'Smith')
         self.assertEqual(item.email.text, 'jsmith@gmail.com')
-    
+
     def test_get_item_by_property(self):
-        item = self.page.items_list.get_item_by_property(last_name='Doe', first_name='Jason')    
+        item = self.page.items_list.get_item_by_property(last_name='Doe', first_name='Jason')
         self.assertEqual(item.first_name.text, 'Jason')
         self.assertEqual(item.last_name.text, 'Doe')
-    
+
     def test_number_of_rows(self):
         assert len(self.page.items_list) == 4
-    
+
     def test_iterate_through_rows(self):
         for row in self.page.items_list:
-            self.assertTrue(hasattr(row, 'last_name')) 
-    
+            self.assertTrue(hasattr(row, 'last_name'))
+
     def test_comprehension_list_slice(self):
         users = [row for row in self.page.items_list[1:3]]
         self.assertEqual(len(users), 2)
@@ -96,10 +96,10 @@ class TestTable(unittest.TestCase):
     def tearDown(self):
         self.driver.close()
 ```
-The `DataTable` class is looking for a "driver" attribute in an owner class, but you can change that behaviour by overriding the attribute `driver_attribute` from the `DataTable` class. 
+The `DataTable` class is looking for a "driver" attribute in an owner class, but you can change that behaviour by overriding the attribute `driver_attribute` from the `DataTable` class.
 
 ```python
 class UsersTable(DataTable):
     ...
     driver_attribute = "selenium"
-``` 
+```
