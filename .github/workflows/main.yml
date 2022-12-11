@@ -10,7 +10,7 @@ name: Test
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: flake8-lint
     services:
       selenium:
