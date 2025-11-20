@@ -1,9 +1,46 @@
-[build-system]
-requires = [
-    "setuptools",
-    "wheel",
-    "setuptools_scm"
+[project]
+name = "selenium-datatable"
+description = "A small library for simplifying a table object in selenium"
+readme = "README.md"
+requires-python = ">=3.8"
+# license = "Apache-2.0"
+authors = [{ name = "Lukasz Fundakowski", email = "fundakol@yahoo.com" }]
+keywords = ["selenium table data-table testing"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
 ]
+dependencies = ["selenium>=3.141.0"]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/fundakol/selenium_datatable"
+
+[project.optional-dependencies]
+dev = [
+  "Flask>=2.0.3",
+  "pytest>=7.0.1",
+  "pytest-cov>=3.0.0",
+  "Werkzeug>=2.0.2",
+]
+
+[dependency-groups]
+dev = [
+  "Flask>=2.0.3",
+  "Werkzeug>=2.0.2",
+  "pytest>=7.0.1",
+  "pytest-cov>=3.0.0",
+]
+
+[build-system]
+requires = ["setuptools", "setuptools_scm", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
