@@ -8,7 +8,6 @@ _error_msg = 'Attribute "{}" must be implemented as tuple("strategy", "locator")
 
 
 class Column:
-
     def __init__(self, how: str, what: str):
         self._how = how
         self._what = what
@@ -18,24 +17,20 @@ class Column:
         return self._how, self._what
 
     def __repr__(self):
-        return "{}(how='{}', what='{}')".format(self.__class__.__name__,
-                                                self._how,
-                                                self._what)
+        return "{}(how='{}', what='{}')".format(self.__class__.__name__, self._how, self._what)
 
     def update_locator(self, row: int) -> None:
         self._what = self._what.format(row=row)
 
 
 class Columns:
-
     def __init__(self, row: int, columns: dict, table: WebElement):
         self.row: int = row
         self.columns: dict = columns
         self._table: WebElement = table
 
     def __repr__(self):
-        return '{}(row="{}", columns={!r})'.format(self.__class__.__name__,
-                                                   self.row, self.columns.keys())
+        return '{}(row="{}", columns={!r})'.format(self.__class__.__name__, self.row, self.columns.keys())
 
     def __getattr__(self, name):
         if name in self.columns:
@@ -49,7 +44,6 @@ class Columns:
 
 
 class _TableMetaclass(type):
-
     def __new__(mcs, new, bases, attrs):
         _columns = dict()
         for key, value in attrs.items():
@@ -65,7 +59,7 @@ class _TableMetaclass(type):
 class DataTable(metaclass=_TableMetaclass):
     rows_locator: Tuple[str, str] = None
     headers_locator: Tuple[str, str] = None
-    driver_attrib: str = 'driver'
+    driver_attrib: str = "driver"
 
     def __init__(self, how: str, what: str) -> None:
         self._table: Optional[WebElement] = None
@@ -73,15 +67,12 @@ class DataTable(metaclass=_TableMetaclass):
         self.current_row: int = 1
 
     def __repr__(self):
-        return '{}(how="{}", what="{}")'.format(self.__class__.__name__,
-                                                self._table_locator[0],
-                                                self._table_locator[1])
+        return '{}(how="{}", what="{}")'.format(self.__class__.__name__, self._table_locator[0], self._table_locator[1])
 
     def __get__(self, obj, owner):
         if not hasattr(obj, self.driver_attrib):
             exc_msg = 'Implementation error. Class "{}" has no attribute "{}"'
-            raise AttributeError(exc_msg.format(obj.__class__.__name__,
-                                                self.driver_attrib))
+            raise AttributeError(exc_msg.format(obj.__class__.__name__, self.driver_attrib))
         self._driver = obj.driver
         self._table = self._driver.find_element(*self._table_locator)
         return self
@@ -89,15 +80,14 @@ class DataTable(metaclass=_TableMetaclass):
     def __getitem__(self, index):
         if isinstance(index, slice):
             start, stop, step = index.indices(len(self))
-            return [Columns(i + 1, self._columns, self._table)
-                    for i in range(start, stop, step)]
+            return [Columns(i + 1, self._columns, self._table) for i in range(start, stop, step)]
         elif isinstance(index, int):
             if 0 <= index < len(self):
                 return Columns(index + 1, self._columns, self._table)
             else:
                 raise IndexError
         else:
-            raise TypeError('Invalid argument type: {}'.format(type(index)))
+            raise TypeError("Invalid argument type: {}".format(type(index)))
 
     def __next__(self):
         if self.current_row > len(self):
@@ -120,7 +110,7 @@ class DataTable(metaclass=_TableMetaclass):
     @current_row.setter
     def current_row(self, value: int) -> None:
         if value < 1:
-            raise ValueError('current_row cannot be less then 1')
+            raise ValueError("current_row cannot be less then 1")
         self.__current_row = value - 1
 
     def get_item_by_position(self, row: int):
@@ -158,8 +148,7 @@ class DataTable(metaclass=_TableMetaclass):
     @property
     def headers(self) -> List[str]:
         """Return names of columns in header row in the table"""
-        elements = self._table.find_elements(
-            *self.get_headers_locator())  # type: ignore
+        elements = self._table.find_elements(*self.get_headers_locator())  # type: ignore
         return [element.text for element in elements]
 
     @property
@@ -169,10 +158,10 @@ class DataTable(metaclass=_TableMetaclass):
 
     def get_rows_locator(self) -> tuple:
         if self.rows_locator is None:
-            raise NotImplementedError(_error_msg.format('rows_locator'))
+            raise NotImplementedError(_error_msg.format("rows_locator"))
         return self.rows_locator
 
     def get_headers_locator(self) -> tuple:
         if self.headers_locator is None:
-            raise NotImplementedError(_error_msg.format('headers_locator'))
+            raise NotImplementedError(_error_msg.format("headers_locator"))
         return self.headers_locator
